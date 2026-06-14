@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday 🌸</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600;800&family=Space+Mono:wght@700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1f0413 0%, #4a0e2e 50%, #2d0a1b 100%);
+            overflow-x: hidden;
+            min-height: 100vh;
+            color: #fce7f3;
+            margin: 0;
+        }
+
+        .title-font { font-family: 'Dancing Script', cursive; }
+        .mono-font { font-family: 'Space Mono', monospace; }
+
+        /* 3D Glass Panel */
+        .glass-panel {
+            background: rgba(255, 182, 193, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 182, 193, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 182, 193, 0.1);
+            border-radius: 2rem;
+        }
+
+        /* 🌸 Enhanced Sakura Falling */
+        .sakura-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .petal {
+            position: absolute; background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+            border-radius: 15px 0 15px 0;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translate3d(0, -10vh, 0) rotate(0deg) scale(0.5); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translate3d(30vw, 110vh, 0) rotate(720deg) scale(1.5); opacity: 0; }
+        }
+
+        /* 🕊️ Birds Flying Animation */
+        .bird { position: absolute; fill: rgba(255, 182, 193, 0.4); animation: fly linear infinite; pointer-events: none; z-index: 1; }
+        @keyframes fly {
+            0% { transform: translateX(-10vw) translateY(0px) scale(0.6); opacity: 0; }
+            10% { opacity: 1; }
+            50% { transform: translateX(50vw) translateY(-30px) scale(0.6); }
+            90% { opacity: 1; }
+            100% { transform: translateX(110vw) translateY(10px) scale(0.6); opacity: 0; }
+        }
+
+        /* Page Transitions */
+        .page { display: none; opacity: 0; transition: opacity 0.8s ease-in-out; z-index: 10; position: relative; width: 100%; }
+        .page.active { display: flex; opacity: 1; animation: fadeIn 0.8s forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* 📱 Cool Phone Dial & Input */
+        .cute-input {
+            background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(244, 114, 182, 0.3); border-radius: 9999px;
+            transition: all 0.3s;
+        }
+        .cute-input:focus { background: rgba(255, 255, 255, 0.2); border-color: #f472b6; box-shadow: 0 0 20px rgba(244, 114, 182, 0.4); outline: none; transform: scale(1.02); }
+        
+        .dial-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(244,114,182,0.3);
+            border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: bold; cursor: pointer; transition: all 0.1s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .dial-btn:active { transform: scale(0.9); background: rgba(244,114,182,0.5); box-shadow: 0 0 20px rgba(244,114,182,0.8); }
+
+        /* 🧸 Animated SVG Teddy Bear */
+        .teddy-container { position: relative; width: 140px; height: 140px; margin: 0 auto 10px auto; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .teddy-ear { transition: transform 0.4s; transform-origin: bottom center; }
+        .teddy-mouth { transition: d 0.4s; }
+        
+        /* Sad State */
+        .teddy-container.sad { transform: translateY(10px) scale(0.95); }
+        .teddy-container.sad .teddy-ear.left { transform: rotate(-25deg); }
+        .teddy-container.sad .teddy-ear.right { transform: rotate(25deg); }
+        .teddy-container.sad .sad-tear { opacity: 1; animation: tearDrop 1s infinite; }
+        .teddy-container.sad .mouth-smile { opacity: 0; }
+        .teddy-container.sad .mouth-frown { opacity: 1; }
+        
+        /* Happy State */
+        .teddy-container.happy { transform: translateY(-15px) scale(1.1); animation: bounceTeddy 1s infinite; }
+        .teddy-container.happy .happy-heart { opacity: 1; animation: floatHeart 1s infinite; }
+        .teddy-container.happy .mouth-smile { opacity: 1; transform: scale(1.2); transform-origin: center; fill: #ff69b4; }
+        .teddy-container.happy .mouth-frown { opacity: 0; }
+
+        .sad-tear, .happy-heart, .mouth-frown { opacity: 0; transition: opacity 0.3s; }
+        
+        @keyframes tearDrop { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(20px); opacity: 0; } }
+        @keyframes floatHeart { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-30px) scale(1.2); opacity: 0; } }
+        @keyframes bounceTeddy { 0%, 100% { transform: translateY(-15px) scale(1.1); } 50% { transform: translateY(-5px) scale(1.15); } }
+
+        /* 📖 3D eBook Stack */
+        .book-container { position: relative; perspective: 1200px; height: 350px; width: 100%; max-width: 400px; margin: 0 auto; }
+        .book-page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-origin: bottom center; border-radius: 1.5rem;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 2rem; text-align: center;
+        }
+        .book-page.active { z-index: 20; transform: translateZ(0) translateY(0) scale(1); opacity: 1; box-shadow: 0 20px 40px rgba(0,0,0,0.4); cursor: pointer; }
+        .book-page.next-1 { z-index: 15; transform: translateZ(-40px) translateY(20px) scale(0.95); opacity: 0.8; }
+        .book-page.next-2 { z-index: 10; transform: translateZ(-80px) translateY(40px) scale(0.90); opacity: 0.5; }
+        .book-page.swiped { transform: translateY(-120%) rotateX(30deg) rotateY(10deg); opacity: 0; pointer-events: none; }
+
+        /* 🎁 Gift Animation */
+        #gift-box { transition: transform 0.2s cubic-bezier(0.25, 1.5, 0.5, 1); user-select: none; }
+        .shake-1 { transform: scale(1.1) rotate(8deg); }
+        .shake-2 { transform: scale(1.2) rotate(-10deg); }
+        .burst { transform: scale(1.4); animation: pop 0.5s forwards; }
+        @keyframes pop { 0% { transform: scale(1.2); } 50% { transform: scale(1.6); } 100% { transform: scale(1.4); } }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen">
+
+    <!-- 🌸 Dynamic Sakura & Birds Background -->
+    <div class="sakura-container" id="bg-container"></div>
+
+    <!-- ================= PAGE 1: COOL DIAL & LOGIN ================= -->
+    <div id="page-login" class="page active flex-col items-center justify-center w-full max-w-md px-6 my-10">
+        <div class="glass-panel p-8 w-full text-center">
+            <h1 class="title-font text-5xl mb-1 text-pink-300 drop-shadow-[0_0_15px_rgba(244,114,182,0.8)]">Welcome!</h1>
+            <p class="text-xs text-pink-200/80 mb-6 font-bold tracking-widest uppercase">Security Vault Active 🔒</p>
+
+            <div class="space-y-5">
+                <div class="relative">
+                    <input type="text" id="user-name" placeholder="YOUR CUTE NAME..." class="cute-input w-full px-6 py-3.5 text-white text-center font-bold text-sm tracking-widest placeholder-pink-300/40 uppercase">
+                </div>
+                
+                <div class="mt-4">
+                    <label class="block text-[10px] font-bold text-pink-300 mb-2 tracking-widest uppercase">Enter DOB to Unlock</label>
+                    
+                    <div id="dob-display" class="mono-font text-3xl font-bold text-pink-400 tracking-widest mb-4 h-10 flex items-center justify-center drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]">
+                        _ _ _ _ . _ _ . _ _
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 justify-items-center px-4">
+                        <button onclick="pressDial('1')" class="dial-btn">1</button>
+                        <button onclick="pressDial('2')" class="dial-btn">2</button>
+                        <button onclick="pressDial('3')" class="dial-btn">3</button>
+                        <button onclick="pressDial('4')" class="dial-btn">4</button>
+                        <button onclick="pressDial('5')" class="dial-btn">5</button>
+                        <button onclick="pressDial('6')" class="dial-btn">6</button>
+                        <button onclick="pressDial('7')" class="dial-btn">7</button>
+                        <button onclick="pressDial('8')" class="dial-btn">8</button>
+                        <button onclick="pressDial('9')" class="dial-btn">9</button>
+                        <button onclick="clearDial()" class="dial-btn text-sm">CLR</button>
+                        <button onclick="pressDial('0')" class="dial-btn">0</button>
+                        <button onclick="backspaceDial()" class="dial-btn text-xl">⌫</button>
+                    </div>
+                </div>
+                
+                <p id="error-msg" class="text-red-300 text-xs hidden font-bold bg-red-900/40 py-2.5 rounded-full border border-red-500/50 mt-2 animate-bounce">Access Denied: Wrong Details! 🥺</p>
+                
+                <button onclick="checkLogin()" class="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-white font-black py-4 rounded-full shadow-[0_0_20px_rgba(244,114,182,0.6)] hover:shadow-[0_0_30px_rgba(244,114,182,0.8)] transition-all mt-2 text-lg tracking-wider">
+                    OPEN VAULT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= PAGE 2: Q&A WITH ANIMATED TEDDY ================= -->
+    <div id="page-qna" class="page flex-col items-center justify-center w-full max-w-lg px-6">
+        <div class="glass-panel p-10 w-full text-center flex flex-col justify-center items-center relative">
+            
+            <div id="teddy-bear" class="teddy-container">
+                <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[0_10px_15px_rgba(0,0,0,0.4)]">
+                    <circle cx="25" cy="30" r="16" fill="#8B4513" class="teddy-ear left" />
+                    <circle cx="75" cy="30" r="16" fill="#8B4513" class="teddy-ear right" />
+                    <circle cx="50" cy="55" r="38" fill="#A0522D" />
+                    <circle cx="50" cy="55" r="34" fill="#CD853F" opacity="0.3" />
+                    <circle cx="35" cy="45" r="4.5" fill="#1a1a1a" />
+                    <circle cx="36" cy="44" r="1.5" fill="#fff" />
+                    <circle cx="65" cy="45" r="4.5" fill="#1a1a1a" />
+                    <circle cx="66" cy="44" r="1.5" fill="#fff" />
+                    <circle cx="50" cy="65" r="16" fill="#FFE4C4" />
+                    <ellipse cx="50" cy="58" rx="6" ry="4" fill="#3E2723" />
+                    <path d="M 42 66 Q 50 74 58 66" stroke="#3E2723" stroke-width="2.5" fill="none" stroke-linecap="round" class="mouth-smile" />
+                    <path d="M 43 70 Q 50 64 57 70" stroke="#3E2723" stroke-width="2.5" fill="none" stroke-linecap="round" class="mouth-frown" />
+                    <circle cx="35" cy="55" r="3" fill="#87CEEB" class="sad-tear" />
+                    <circle cx="65" cy="55" r="3" fill="#87CEEB" class="sad-tear" style="animation-delay: 0.2s;" />
+                    <path d="M 20 20 A 5 5 0 0 0 10 20 A 5 5 0 0 0 20 30 Z" fill="#ff69b4" class="happy-heart" style="transform-origin: 15px 25px; left: 10px;" />
+                    <path d="M 90 30 A 5 5 0 0 0 80 30 A 5 5 0 0 0 90 40 Z" fill="#ff69b4" class="happy-heart" style="transform-origin: 85px 35px; animation-delay: 0.3s;" />
+                </svg>
+            </div>
+            
+            <h2 id="question-text" class="title-font text-5xl text-pink-300 mb-10 drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]">Are u in?</h2>
+            
+            <!-- FIXED BUTTON CONTAINER: YES on left, NO on right -->
+            <div class="flex justify-center items-center gap-6 w-full" id="btn-container">
+                <button id="btn-yes" onmouseover="teddyState('happy')" onmouseout="teddyState('neutral')" onclick="nextQuestion()" class="bg-pink-500 hover:bg-pink-400 text-white font-black py-4 px-10 rounded-full shadow-[0_0_20px_rgba(244,114,182,0.6)] transition-all z-20 w-36 text-lg hover:scale-110">YES</button>
+                <button id="btn-no" onmouseenter="teddyState('sad'); dodgeCursor(event);" ontouchstart="teddyState('sad'); dodgeCursor(event);" class="bg-zinc-800/80 text-zinc-300 font-bold py-4 px-10 rounded-full transition-all duration-200 z-50 w-36 text-lg border border-zinc-600">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= PAGE 3: 3D eBOOK NOTES ================= -->
+    <div id="page-notes" class="page flex-col items-center justify-center w-full max-w-4xl px-6 min-h-screen">
+        <h1 class="title-font text-5xl md:text-6xl text-center text-pink-300 mb-2 drop-shadow-[0_0_15px_rgba(244,114,182,0.8)]">Happy Birthday, <br><span id="display-name" class="capitalize text-white"></span>!</h1>
+        <p class="text-pink-200/80 text-center mb-8 font-bold tracking-widest text-xs animate-pulse">(TAP THE CARD TO SWIPE UP)</p>
+        
+        <div class="book-container" id="book-container">
+            <!-- Pages injected by JS -->
+        </div>
+    </div>
+
+    <!-- ================= PAGE 4: 3-CLICK GIFT & FINAL MSG ================= -->
+    <div id="page-gift" class="page flex-col items-center justify-center w-full px-6 min-h-screen">
+        <h2 id="gift-instruction" class="title-font text-5xl text-pink-300 mb-10 drop-shadow-[0_0_15px_rgba(244,114,182,0.8)]">Tap the box 3 times!</h2>
+        
+        <!-- Interactive Gift Box -->
+        <div id="gift-box" onclick="hitGift()" class="text-[8rem] cursor-pointer drop-shadow-[0_20px_30px_rgba(0,0,0,0.5)] mb-12 relative z-20">🎁</div>
+
+        <!-- Hidden Final Form -->
+        <div id="final-msg" class="glass-panel p-8 w-full max-w-md text-center hidden animate-[fadeIn_1s_forwards] z-30">
+            <h2 class="title-font text-4xl text-pink-300 mb-4">Happy Birthday once more! 🎈</h2>
+            <p class="text-pink-100/90 mb-6 font-medium text-sm">Are u happy? Wanna say something?</p>
+            <textarea placeholder="Type your beautiful message here..." class="cute-input w-full px-5 py-4 text-white placeholder-pink-300/50 mb-6 h-28 resize-none text-sm"></textarea>
+            <button onclick="closeWebsite()" class="w-full bg-white text-pink-900 font-black py-4 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.6)] hover:bg-pink-100 transition-all text-lg">
+                SEND & FINISH
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= LOGIC SCRIPTS ================= -->
+    <script>
+        // --- 1. Background Enhancements (Sakura + Birds) ---
+        const bgContainer = document.getElementById('bg-container');
+        
+        // Sakura Generator (Heavy)
+        for (let i = 0; i < 60; i++) {
+            let petal = document.createElement('div');
+            petal.className = 'petal';
+            let size = Math.random() * 12 + 4;
+            let blur = Math.random() * 3; // Add depth
+            petal.style.width = `${size}px`; 
+            petal.style.height = `${size}px`;
+            petal.style.left = `${Math.random() * 100}vw`;
+            petal.style.animationDuration = `${Math.random() * 6 + 4}s`;
+            petal.style.animationDelay = `${Math.random() * 5}s`;
+            petal.style.filter = `blur(${blur}px)`;
+            bgContainer.appendChild(petal);
+        }
+
+        // Bird Generator (SVG silhouettes)
+        const birdSVG = `<svg viewBox="0 0 24 24" class="w-8 h-8"><path d="M22 6c-2 1.5-4.5 2-7 2s-5-.5-7-2c-1.5 2-4 3.5-6.5 4 2.5 1 5.5 1.5 8 1 2.5-.5 5-1.5 7.5-3 1.5 1.5 3 2.5 5 2-1-.5-2-1.5-3-2z"/></svg>`;
+        for(let i = 0; i < 5; i++) {
+            let bird = document.createElement('div');
+            bird.className = 'bird';
+            bird.innerHTML = birdSVG;
+            bird.style.top = `${Math.random() * 40}vh`;
+            bird.style.animationDuration = `${Math.random() * 10 + 15}s`;
+            bird.style.animationDelay = `${Math.random() * 10}s`;
+            bgContainer.appendChild(bird);
+        }
+
+        // --- 2. Phone Dial & Audio Synth Logic ---
+        let dobInput = "";
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playBeep(freq, type) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.value = freq;
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.15);
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
+
+        function pressDial(num) {
+            playBeep(600 + (parseInt(num)*20), 'sine'); // Different pitch per key
+            if (dobInput.length < 8) {
+                dobInput += num;
+                updateDobDisplay();
+            }
+        }
+        
+        function backspaceDial() {
+            playBeep(300, 'square');
+            dobInput = dobInput.slice(0, -1);
+            updateDobDisplay();
+        }
+
+        function clearDial() {
+            playBeep(200, 'sawtooth');
+            dobInput = "";
+            updateDobDisplay();
+        }
+
+        function updateDobDisplay() {
+            let formatted = "";
+            for (let i = 0; i < 8; i++) {
+                if (i === 4 || i === 6) formatted += ".";
+                if (i < dobInput.length) formatted += dobInput[i];
+                else formatted += "_";
+            }
+            document.getElementById('dob-display').innerText = formatted;
+        }
+
+        // --- 3. Database Validation ---
+        const db = { "mahima": "2067.03.31", "anisha": "2067.03.20", "bigyan": "2067.10.27", "sayan": "2068.02.27", "chetan": "2068.02.16" };
+
+        function switchPage(from, to) {
+            document.getElementById(from).classList.remove('active');
+            setTimeout(() => document.getElementById(to).classList.add('active'), 400);
+        }
+
+        function checkLogin() {
+            const name = document.getElementById('user-name').value.trim().toLowerCase();
+            const formattedInput = document.getElementById('dob-display').innerText; // already YYYY.MM.DD
+            const errorMsg = document.getElementById('error-msg');
+
+            if (db[name] && db[name] === formattedInput) {
+                errorMsg.classList.add('hidden');
+                document.getElementById('display-name').innerText = name;
+                switchPage('page-login', 'page-qna');
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        // --- 4. Custom SVG Teddy & QnA Logic ---
+        const teddy = document.getElementById('teddy-bear');
+        
+        function teddyState(state) {
+            teddy.className = `teddy-container ${state}`;
+        }
+
+        const qs = ["Are u in?", "Will u accept my gift?", "Are u happy?", "We are almost there?"];
+        let qIdx = 0;
+
+        function nextQuestion() {
+            teddyState('happy');
+            playBeep(800, 'sine');
+            qIdx++;
+            if (qIdx < qs.length) {
+                const qt = document.getElementById('question-text');
+                qt.style.opacity = '0';
+                setTimeout(() => { 
+                    qt.innerText = qs[qIdx]; 
+                    qt.style.opacity = '1'; 
+                    teddyState('neutral'); 
+                    
+                    // Reset NO button position completely for the next question
+                    const noBtn = document.getElementById('btn-no');
+                    noBtn.style.position = 'static';
+                    noBtn.style.left = 'auto';
+                    noBtn.style.top = 'auto';
+                }, 300);
+            } else {
+                switchPage('page-qna', 'page-notes');
+                initBook();
+            }
+        }
+
+        function dodgeCursor(e) {
+            if (e) e.preventDefault(); // Prevents mobile touch from counting as a click
+            const btn = document.getElementById('btn-no');
+            
+            // Switch to fixed position so it can fly anywhere on the screen
+            btn.style.position = 'fixed';
+            
+            // Calculate screen boundaries safely
+            const maxX = window.innerWidth - btn.offsetWidth - 20;
+            const maxY = window.innerHeight - btn.offsetHeight - 20;
+            
+            // Generate random positions ensuring it stays visible
+            const rx = Math.max(20, Math.random() * maxX);
+            const ry = Math.max(20, Math.random() * maxY);
+            
+            btn.style.left = `${rx}px`;
+            btn.style.top = `${ry}px`;
+            btn.style.right = 'auto';
+            btn.style.bottom = 'auto';
+            
+            playBeep(250, 'triangle');
+        }
+
+        // --- 5. 3D eBook Swipe Logic ---
+        const notes = [
+            { icon: '🌸', title: 'Note 01', text: 'Wishing you the happiest of birthdays! May your day be as bright and beautiful as your smile. Keep shining!' },
+            { icon: '✨', title: 'Note 02', text: 'No matter how much you grow, never lose that fun spark. Here is to health, wealth, and lots of joy this year!' },
+            { icon: '🎂', title: 'Note 03', text: 'Eat lots of cake, take lots of pictures, and enjoy every single second of your special day.' },
+            { icon: '🎁', title: 'Note 04', text: 'This is your year to conquer your goals. Believe in yourself, take risks, and remember I am cheering for you.' },
+            { icon: '💖', title: 'Note 05', text: 'Just a reminder that you are loved and cherished. Swipe up one last time to reveal your gift!' }
+        ];
+
+        let currentCard = 0;
+        function initBook() {
+            const container = document.getElementById('book-container');
+            container.innerHTML = '';
+            notes.forEach((note, i) => {
+                const card = document.createElement('div');
+                card.className = `book-page glass-panel bg-pink-950/90 border border-pink-500/30 ${i===0?'active': i===1?'next-1': i===2?'next-2':'hidden'}`;
+                card.id = `card-${i}`;
+                card.onclick = () => swipeCard(i);
+                card.innerHTML = `
+                    <div class="text-6xl mb-5 drop-shadow-[0_0_15px_rgba(255,255,255,0.6)]">${note.icon}</div>
+                    <h3 class="font-black text-2xl text-pink-300 mb-4 tracking-widest uppercase">${note.title}</h3>
+                    <p class="text-base text-pink-100/90 leading-relaxed font-medium">${note.text}</p>
+                    <div class="absolute bottom-6 text-pink-400 text-xs animate-bounce font-bold tracking-widest uppercase">👆 Tap to flip</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function swipeCard(index) {
+            if (index !== currentCard) return; 
+            playBeep(500, 'sine');
+            
+            document.getElementById(`card-${index}`).classList.replace('active', 'swiped');
+            currentCard++;
+
+            if (currentCard < notes.length) {
+                const next1 = document.getElementById(`card-${currentCard}`);
+                const next2 = document.getElementById(`card-${currentCard + 1}`);
+                const next3 = document.getElementById(`card-${currentCard + 2}`);
+                
+                if (next1) { next1.classList.remove('next-1', 'hidden'); next1.classList.add('active'); }
+                if (next2) { next2.classList.remove('next-2', 'hidden'); next2.classList.add('next-1'); }
+                if (next3) { next3.classList.remove('hidden'); next3.classList.add('next-2'); }
+            } else {
+                setTimeout(() => switchPage('page-notes', 'page-gift'), 500);
+            }
+        }
+
+        // --- 6. 3-Click Gift Logic ---
+        let giftHits = 0;
+        function hitGift() {
+            giftHits++;
+            playBeep(400 + (giftHits*100), 'triangle');
+            const box = document.getElementById('gift-box');
+            if (giftHits === 1) box.classList.add('shake-1');
+            if (giftHits === 2) { box.classList.remove('shake-1'); box.classList.add('shake-2'); }
+            if (giftHits === 3) {
+                playBeep(900, 'sine'); setTimeout(() => playBeep(1200, 'sine'), 100);
+                document.getElementById('gift-instruction').innerText = "Surprise! 🎉";
+                box.classList.remove('shake-2');
+                box.classList.add('burst');
+                box.innerHTML = '💥✨🍫💝';
+                setTimeout(() => document.getElementById('final-msg').classList.remove('hidden'), 800);
+            }
+        }
+
+        function closeWebsite() {
+            alert("Sent! Thank you! Enjoy your beautiful day! 🌸");
+        }
+    </script>
+</body>
+</html>
